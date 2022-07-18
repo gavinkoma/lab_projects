@@ -8,7 +8,7 @@ from std_msgs.msg import Bool
 
 #kivy convention is that you can name your kivy class literally anything you want but
 #it must end with App for it to be /classified/
-class TutorialApp(MDApp):
+class TreadmillControlApp(MDApp):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
@@ -24,27 +24,45 @@ class TutorialApp(MDApp):
 
     def start_tread(self,*args):
         print("Started Treadmill.")
+        msg=True
+        pub_start.publish(msg)
+        
 
     def record_video(self,*args):
         print("Recording started.")
+        msg=True
+        pub_record.publish(msg)
 
     def stop_exit(self,*args):
         print("Quitting and exiting.")
+        msg=True
+        pub_exit.publish(msg)
 
     def speed_16(self,*args):
         print("Setting treadmill speed to 16.")
+        msg=True
+        pubsp16.publish(msg)
 
     def speed_20(self,*args):
         print("Setting treadmill speed to 20.")
+        msg=True
+        pubsp20.publish(msg)
 
     def speed_24(self,*args):
         print("Setting treadmill speed to 24.")
+        msg=True
+        pubsp24.publish(msg)
 
     def speed_28(self,*args):
         print("Setting treadmill speed to 28.")
+        msg=True
+        pubsp28.publish(msg)
 
     def speed_32(self,*args):
         print("Setting treadmill speed to 32.")
+        msg=True
+        pubsp32.publish(msg)
+
 
 if __name__ == '__main__':
     #okay so we have 16, 20, 24, 28, 32 speeds and we need a button for every one of them
@@ -64,7 +82,7 @@ if __name__ == '__main__':
 
     rospy.init_node('simple_gui', anonymous=True)
 
-    TutorialApp().run()
+    TreadmillControlApp().run()
 
 
 
