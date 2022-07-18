@@ -1,14 +1,119 @@
 FloatLayout:
-    MDLabel:
-        text: "dumb bitch~"
-        halign: "center"       
-        size_hint: 0.5, 0.5 
-        pos_hint: {"center_x": .25, "center_y": .8}
+    
+    MDRaisedButton:
+        canvas:
+            Color:
+                rgba: (1,1,1,0.5)
+            Rectangle:
+                size: self.size
+                pos: self.pos
+        text: "Start treadmill."
+        font_size: "30sp"
+        size_hint: 0.35,0.25
+        pos_hint: {"center_x":0.25,"center_y": 0.83}
+        on_press: app.start_tread(*args)
+        
+    MDRaisedButton:
+        canvas:
+            Color:
+                rgba: (1,1,1,0.5)
+            Rectangle:
+                size: self.size
+                pos: self.pos
+        text: "Record a video."
+        font_size: "30sp"
+        size_hint: 0.35,0.25
+        pos_hint: {"center_x":0.25,"center_y": 0.50}
+        on_press: app.record_video(*args)
 
     MDRaisedButton:
-        text: "do you want your clothes back or can i keep wearing them"
-        size_hint: 0.5, 0.5 
-        pos_hint: {"center_x": .5, "center_y": .5}
+        canvas:
+            Color:
+                rgba: (1,1,1,0.5)
+            Rectangle:
+                size: self.size
+                pos: self.pos
+        text: "Stop & exit."
+        font_size: "30sp"
+        size_hint: 0.35,0.25
+        pos_hint: {"center_x":0.25,"center_y": 0.18}
+        on_press: app.stop_exit(*args)
 
+    MDLabel:
+        canvas:
+            Color:
+                rgba: (1,1,1,0.5)
+            RoundedRectangle:
+                size: self.size
+                pos: self.pos
+                radius: [25]
+        text: "Select a Speed:"
+        halign: "center"
+        font_size: "30sp"
+        size_hint: 0.4,0.14
+        pos_hint: {"center_x":0.75,"center_y": 0.88}
 
- 
+    MDRaisedButton:
+        canvas:
+            Color:
+                rgba: (183,244,216,0.5)
+            Rectangle:
+                size: self.size
+                pos: self.pos
+        text: "Speed 16"
+        font_size: "30sp"
+        size_hint: 0.4,0.14
+        pos_hint: {"center_x":0.75,"center_y": 0.73}
+        on_press: app.speed_16(*args)
+
+    MDRaisedButton:
+        canvas:
+            Color:
+                rgba: (183, 244, 216, 0.5)
+            Rectangle:
+                size: self.size
+                pos: self.pos
+        text: "Speed 20"
+        font_size: "30sp"
+        size_hint: 0.4,0.14
+        pos_hint: {"center_x":0.75,"center_y": 0.58}
+        on_press: app.speed_20(*args)
+
+    MDRaisedButton:
+        canvas:
+            Color:
+                rgba: (183, 244, 216, 0.5)
+            Rectangle:
+                size: self.size
+                pos: self.pos
+        text: "Speed 24"
+        font_size:"30sp"
+        size_hint: 0.4,0.14
+        pos_hint: {"center_x":0.75,"center_y": 0.43}
+        on_press: app.speed_24(*args)
+
+    MDRaisedButton:
+        canvas:
+            Color:
+                rgba: (183, 244, 216, 0.5)
+            Rectangle:
+                size: self.size
+                pos: self.pos
+        text: "Speed 28"
+        font_size: "30sp"
+        size_hint: 0.4,0.14
+        pos_hint: {"center_x":0.75,"center_y": 0.28}
+        on_press: app.speed_28(*args)
+
+    MDRaisedButton:
+        canvas:
+            Color:
+                rgba: (183, 244, 216, 0.5)
+            Rectangle:
+                size: self.size
+                pos: self.pos
+        text: "Speed 32"
+        font_size: "30sp"
+        size_hint: 0.4,0.14
+        pos_hint: {"center_x":0.75,"center_y": 0.13}
+        on_press: app.speed_32(*args)
