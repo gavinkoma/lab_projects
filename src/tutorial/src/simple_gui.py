@@ -4,7 +4,7 @@ import rospy
 from kivymd.app import MDApp
 from kivy.lang import Builder
 from std_msgs.msg import Bool
-
+import tmilltracker import *
 
 #kivy convention is that you can name your kivy class literally anything you want but
 #it must end with App for it to be /classified/
@@ -31,7 +31,9 @@ class TreadmillControlApp(MDApp):
     def record_video(self,*args):
         print("Recording started.")
         msg=True
+        handleInput(self,c=D)
         pub_record.publish(msg)
+
 
     def stop_exit(self,*args):
         print("Quitting and exiting.")
