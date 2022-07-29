@@ -32,6 +32,7 @@ class TreadmillControlApp(MDApp):
         print("Recording started.")
         msg=True
         handleInput(self,c=D)
+        send_cap_msg("ENDTRIG")
         pub_record.publish(msg)
 
 
