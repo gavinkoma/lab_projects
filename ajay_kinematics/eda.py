@@ -1,13 +1,23 @@
 import matplotlib.pyplot as plt
 import pandas as pd 
+import os
+idx = pd.IndexSlice
 
 #lets view and assess the data first 
 ajay = pd.read_hdf("/Users/gavinkoma/Documents/lab_projects/ajay_kinematics/data/alldata.h5")
-
+ajay = ajay.iloc[3:]
 #view as below, see head:
 print(ajay.head(4))
 #we have collarbone --> shoulder --> elbow --> wrist 
-print(ajay.iloc[1,:])
+datadir='../data'
+ds = ajay
+ds.index=ds.index.set_names(['video','frame'])
+
+dsj = ds.groupby(['video'],group_keys=False)
+
+
+# get intersection of videos in metadata and dataset
+#vids=list(set(ds.index) & set(ds.index.get_level_values('video').unique()))
 
 #alright lets make a few plots i guess, would be worth it to assess what were looking at 
 #we can groupby video name and then plot those for our assessment 
