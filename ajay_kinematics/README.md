@@ -16,7 +16,7 @@ we will probably want to calculate some variable and compare with qda (we can tr
 
 we will definitely want to perform some version of a clustering algo. 
 
-
+i am also uploading another pyscript "ajay_2d_featureeng.py" which is a tidied up summary of what was covered earlier today. things are in functions now to facilitate calling them later... might be easier for later use.... 
 
 
 

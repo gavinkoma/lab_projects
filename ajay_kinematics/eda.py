@@ -19,13 +19,13 @@ elb = ajay.loc[idx[:,:],idx[:,'Elbow',['x','y']]].droplevel(["scorer","bodyparts
 wri = ajay.loc[idx[:,:],idx[:,'Wrist',['x','y']]].droplevel(["scorer","bodyparts"],axis='columns')
 
 
-feat_vec = {}
+euc = (elb-wri).rename(columns={"x":"dx",
+								"y":"dy"})
 
 
-euc_dist = (elb-wri).rename(columns={"x":"dx",
-									"y":"dy"})
+#we should probably do the joint angles
 
-feat_vec.update(euc_dist)
+euc["ewdist"]=np.sqrt((euc["dx"]**2)+(euc["dy"]**2))
 
 
 
@@ -34,7 +34,12 @@ first.index.get_level_values('video').unique()
 #alright lets make a few plots i guess, would be worth it to assess what were looking at 
 #we can groupby video name and then plot those for our assessment 
 #probably will take a good bit though just because of the overall size
-def create_plots(x,y):
+#lets make a lil val for the euc distance location
+
+def euc_distance():
+	pass 
+
+def create_plots():
 	pass 
 
 def calc_vel():
