@@ -18,7 +18,12 @@ we will definitely want to perform some version of a clustering algo.
 
 i am also uploading another pyscript "ajay_2d_featureeng.py" which is a tidied up summary of what was covered earlier today. things are in functions now to facilitate calling them later... might be easier for later use.... 
 
+-----
 
+06.20.23
+chatted with siya today, a for-loop with an average function that will pull for each video would be great; most likely will need to implement some sort of .groupby per video name in vidz_list to function 
+
+definitely do not want to have to include 500+ lines to calcualte for each individual video!~
 
 
 
