@@ -135,6 +135,19 @@ shou = ajay.loc[idx['2023-05-25_10_25_46',:],idx[:,'Shoulder',['x','y']]].drople
 #we want dy/dx, so we want y2-y1/x2-x1 --> shoulder2-elbow2/shoulder1-elbow1
 line_ba = np.array(shou) - np.array(elb_new)
 
+def give_average(vids_list,dataframe):
+	return pd.mean[][][][]
+
+for val in vids_list:
+	print(val)
+	average = give_average(val,dataframe)
+
+
+#we should have max y and average y's per video but we can also group these together
+#somehow... but currently we cant because we dont have the true labels of these animals 
+
+
+
 
 
 
