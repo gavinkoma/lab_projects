@@ -192,27 +192,57 @@ def rangeval(data):
 	#and then we can calculate sinø = (oppostie/hyp)
 	#opp = hyp * sinø
 	#∆h/∆t = v*sinø
-
-	#dont forget:
-	#power = work/time = ∆E/∆T = ∆mgh/∆t = (mg(∆h/∆t))
-	#power = mg*v*sinø
-	#v = power/(mg*sinø)\
-
 	#lets just assume we only need ∆h/∆t = v*sinø
 	#where v = sinø/(∆h/∆t) OR (sinø*∆t)/∆t
 
 	#we most likely want atan2 to calculate that sin angle
 	#we have two new values that raise above ground level to account for
-	#use the prev function segment angle
 	#index the values first because we need the min and max
 
-	indexx_prev = data.iloc[[x_prev]]
-	indexx_max = data.iloc[[indexmax_x]]
+	# indexx_prev = data.iloc[[x_prev]]
+	# print(indexx_prev)
+	# indexx_max = data.iloc[[indexmax_x]]
+	# print(indexx_max)
 	indexy_prev = data.iloc[[y_prev]]
+	print(indexy_prev)
 	indexy_max = data.iloc[[indexmax_y]]
+	print(indexy_max)
+
+	#this takes body1 & body2, but we can pass out prev cood & the peak cood
+	def find_sin(lower,higher):
+		#pull out body coordinates
+		x_2 = higher['x'].reset_index(drop=True)
+		#print(x_1)
+		y_2 = higher['y'].reset_index(drop=True)
+		#print(y_1)
+		x_1 = lower['x'].reset_index(drop=True)
+		#print(x_2)
+		y_1 = lower['y'].reset_index(drop=True)
+		#print(y_2)
+
+		#find differences between the vertices
+		dx = (x_2-x_1)
+		dy = (y_2-y_1)
+
+		#calculate the angle in radians
+		angle = np.arctan2(dy,dx)
+
+		#this will return the angle from positive x and the ray 
+		#from the origin to the point (our ∆x/∆y) which is perfect
+		#because we want to calculate the sinø for our velocity
+		#change to degree
+		def to_degree(angle):
+			return np.rad2deg(angle)
+
+		return to_degree(angle)
+
+	sin = find_sin(indexy_prev,indexy_max)
+	print(sin) #good we are getting a fuckin angle woooO!
+
+	#now we want to do our actual velocity calculation
+	#where v = sinø/(∆h/∆t) OR (sinø*∆t)/∆h
 
 	
-
 
 range_ = rangeval(wri)
 
