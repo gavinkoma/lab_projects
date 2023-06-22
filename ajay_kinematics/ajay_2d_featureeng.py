@@ -159,6 +159,68 @@ mean_seg_elbwri = mean(seg_elbwri)
 #we should also reference the reach window and use those frames as an index too 
 #maybe at that point we can use those to calc the mean/speed values and be like very official 
 
+#in this case maybe we can pull the frames but im not sure if this is really worth it
+#actually it is, we would need to pull the peak frame and lets say we pull the previous like 100
+#frames, we can take the velocity in terms of distance per second 
+#so pull the values first --> we will need x & y components of this
+
+#im just going to keep storming around here for now 
+#lets say we have points of the wrist (which we do)
+
+def rangeval(data):
+	#pass the data you want to assess
+	x = data.iloc[:,0]
+	y = data.iloc[:,1]
+
+	#pull the max values
+	indexmax_x = np.argmax(x)
+	print("index of max x value: " + str(indexmax_x))
+	indexmax_y = np.argmax(y)
+	print("index of max y value: " + str(indexmax_y))
+
+	x_prev = indexmax_x - 100
+	y_prev = indexmax_y - 100 
+
+	def createList(r1,r2):
+		return list(range(r1,r2+1))
+
+	range_x = createList(x_prev,indexmax_x)
+	range_y = createList(y_prev,indexmax_y)
+
+	#velocity is ∆x over ∆t along the hypotenuse 
+	#and the height is ∆h over ∆t
+	#and then we can calculate sinø = (oppostie/hyp)
+	#opp = hyp * sinø
+	#∆h/∆t = v*sinø
+
+	#dont forget:
+	#power = work/time = ∆E/∆T = ∆mgh/∆t = (mg(∆h/∆t))
+	#power = mg*v*sinø
+	#v = power/(mg*sinø)\
+
+	#lets just assume we only need ∆h/∆t = v*sinø
+	#where v = sinø/(∆h/∆t) OR (sinø*∆t)/∆t
+
+	#we most likely want atan2 to calculate that sin angle
+	#we have two new values that raise above ground level to account for
+	#use the prev function segment angle
+	#index the values first because we need the min and max
+
+	indexx_prev = data.iloc[[x_prev]]
+	indexx_max = data.iloc[[indexmax_x]]
+	indexy_prev = data.iloc[[y_prev]]
+	indexy_max = data.iloc[[indexmax_y]]
+
+	
+
+
+range_ = rangeval(wri)
+
+
+
+
+
+
 
 
 
