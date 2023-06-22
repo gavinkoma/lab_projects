@@ -167,7 +167,7 @@ mean_seg_elbwri = mean(seg_elbwri)
 #im just going to keep storming around here for now 
 #lets say we have points of the wrist (which we do)
 
-def rangeval(data):
+def velocidad(data):
 	#pass the data you want to assess
 	x = data.iloc[:,0]
 	y = data.iloc[:,1]
@@ -234,17 +234,27 @@ def rangeval(data):
 		def to_degree(angle):
 			return np.rad2deg(angle)
 
-		return to_degree(angle)
+		return to_degree(angle),dy
 
-	sin = find_sin(indexy_prev,indexy_max)
-	print(sin) #good we are getting a fuckin angle woooO!
+	sin,dy = find_sin(indexy_prev,indexy_max)
+
+	#good we are getting a fuckin angle woooO!
 
 	#now we want to do our actual velocity calculation
 	#where v = sinø/(∆h/∆t) OR (sinø*∆t)/∆h
+	#we can let ∆h be ∆y (change in height)
 
-	
+	#for now we can assume that fps = 50 until we get the real value
+	def velu(sin,dy):
+		print(sin)
+		print(dy)
+		fps = 20
+		return (sin*(100/fps)/dy) #100 frames / 50 frames per second = 2 seconds
 
-range_ = rangeval(wri)
+	velocity = velu(sin,dy)
+	print(velocity)
+
+velocidad(wri)
 
 
 
