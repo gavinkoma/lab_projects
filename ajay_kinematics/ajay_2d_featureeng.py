@@ -12,6 +12,11 @@ ajay = pd.read_hdf("/Users/gavinkoma/Documents/lab_projects/ajay_kinematics/data
 for k in ajay.keys():
 	print(k)
 
+
+#alright i might have fucked up bc how do i add this onto the actually dataframe
+#that i have to work on???? right now it just outputs values....
+
+
 #read in the x & y of the wrist, elbow, shoulder, and back
 wri = ajay.loc[idx[:,:],idx[:,'Wrist',['x','y']]].droplevel(["scorer","bodyparts"],axis='columns')
 elb = ajay.loc[idx[:,:],idx[:,'Elbow',['x','y']]].droplevel(["scorer","bodyparts"],axis='columns')
@@ -38,10 +43,10 @@ col_sho = calc_diff(col,shou)
 euc_col_elb = euc_dist(col_sho)
 
 #read in the x & y of the wrist, elbow, shoulder, and back
-wri = ajay.loc[idx['2023-05-25_10_25_46',:],idx[:,'Wrist',['x','y']]].droplevel(["scorer","bodyparts"],axis='columns')
-elb = ajay.loc[idx['2023-05-25_10_25_46',:],idx[:,'Elbow',['x','y']]].droplevel(["scorer","bodyparts"],axis='columns')
-shou = ajay.loc[idx['2023-05-25_10_25_46',:],idx[:,'Shoulder',['x','y']]].droplevel(["scorer","bodyparts"],axis='columns')
-col = ajay.loc[idx['2023-05-25_10_25_46',:],idx[:,'Collarbone',['x','y']]].droplevel(["scorer","bodyparts"],axis='columns')
+#wri = ajay.loc[idx['2023-05-25_10_25_46',:],idx[:,'Wrist',['x','y']]].droplevel(["scorer","bodyparts"],axis='columns')
+#elb = ajay.loc[idx['2023-05-25_10_25_46',:],idx[:,'Elbow',['x','y']]].droplevel(["scorer","bodyparts"],axis='columns')
+#shou = ajay.loc[idx['2023-05-25_10_25_46',:],idx[:,'Shoulder',['x','y']]].droplevel(["scorer","bodyparts"],axis='columns')
+#col = ajay.loc[idx['2023-05-25_10_25_46',:],idx[:,'Collarbone',['x','y']]].droplevel(["scorer","bodyparts"],axis='columns')
 
 #we need to create tuples of coordinates, elbow should be in the middle of all!
 def tuple_line(data):
@@ -74,7 +79,31 @@ def joint_angle_elbow(wri,elb,shou):
 	plt.ion()
 	plt.figure()
 	plt.show()
+
+	#one thing that we will want to keep in mind is that the data here only pertains
+	#to the angle calculated from the shoulder --> elbow <-- wri
+	#dont forget that we still need to calculate the shoulder angle
 	plt.plot(range(len(cosine_angle)),cosine_angle)
+	plt.xlabel("time points")
+	plt.ylabel("segmented cosine angle")
+	plt.title("elbow angle progression during reach")
+	return print(cosine_angle)
+
+def joint_angle_shou(elb,shou,col):
+	# #merge the tuples so they are actually lines
+	# wri_elb = merge_tuples(wri_tuple,elb_tuple)
+	# elb_shou = merge_tuples(elb_tuple,shou_tuple)
+	line_ba = np.array(shou) - np.array(elb)
+	line_bc = np.array(shou) - np.array(col)
+	cosine_angle = mydot(line_ba,line_bc) / (normalization(line_ba) * normalization(line_bc))
+	cosine_angle = np.degrees(np.arccos(cosine_angle))
+	plt.ion()
+	plt.figure()
+	plt.show()
+	plt.plot(range(len(cosine_angle)),cosine_angle)
+	plt.xlabel("time points")
+	plt.ylabel("segmented cosine angle")
+	plt.title("elbow angle progression during reach")
 	return print(cosine_angle)
 
 #put our values in a nice vector form
@@ -88,6 +117,7 @@ shou_vector_x_ = -np.diff(shou.iloc[:,0])
 shou_vector_y_ = -np.diff(shou.iloc[:,1])
 
 joint_angle_elbow(wri,elb,shou)
+joint_angle_shou(elb,shou,col)
 
 #list your inputs from top to bottom, this is important because this 
 #is how i want to design this function
@@ -255,9 +285,7 @@ def velocidad(data):
 	print(velocity)
 
 velocidad(wri)
-
-
-
+velocidad(elb)
 
 
 
