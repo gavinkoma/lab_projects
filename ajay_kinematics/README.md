@@ -1,3 +1,9 @@
+09.15.23
+alright so all we have to do now in update the dataframe for ajay's kinematics and then we need to output via knn
+
+
+---
+
 06.12.23
 .ignore included to ignore ajay file data
 lets do a bit of exploring of the data 
