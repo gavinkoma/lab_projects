@@ -71,20 +71,23 @@ import numpy as np
 import matplotlib.pyplot as plt
 from scipy import stats
 
-N = 100
+N = 200
 x = stats.norm.rvs(loc=7,scale=1,size=N) #pull samples from standard dist
-num_bins = 7 #define how many different blocks
+num_bins = 9 #define how many different blocks
 new = []
 for val in x:
 	val = int(val)
 	new.append(val)
 x = np.array(new)
-
 plt.hist(x, bins=num_bins, facecolor='blue', alpha=0.5,edgecolor='black')
+plt.show()
 
-y = np.linspace(4, 9, 1000)
-bin_width = (x.max() - x.min()) / num_bins
-plt.plot(y, stats.norm.pdf(y) * N * bin_width)
+#y = np.linspace(4, 9, 1000)
+#bin_width = (x.max() - x.min()) / num_bins
+#plt.plot(y, stats.norm.pdf(y) * N * bin_width)
+
+
+
 
 plt.ylabel("# of blocks")
 plt.xlabel("height in cm")
