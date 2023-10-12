@@ -13,7 +13,7 @@ from mpl_toolkits.mplot3d import Axes3D
 
 #lets just say hip height is 15cm (this is way too high)
 #np.random.normal(mean,std,(size))
-array = np.random.normal(15,0,(50,8))
+array = np.random.normal(15,1,(20,20))
 z = np.array(array)
 
 #define the plot
@@ -35,3 +35,60 @@ print(x,y)
 #make a 3d dataset given x & y & z of a matrix!
 ax.plot_surface(x,y,z)
 plt.show()
+
+
+#this one works but i think there can be better
+###
+#recall: np.random.normal(mean,std,array)
+mu,sigma = 15,2 #let the hip height be at 7cm for now
+s = np.random.normal(mu,sigma,100)
+new = []
+for val in s:
+	val = int(val)
+	#new = array(val)
+	new.append(val)
+s = np.array(new)
+
+#plot histogram in addition to the other values
+count,bins,ignored = plt.hist(s,8,density=True,edgecolor='black')
+
+#plot itself
+plt.plot(bins, 
+	1/(sigma * np.sqrt(2 * np.pi)) * np.exp( - (bins - mu)**2 / (2 * sigma**2) ),
+	linewidth=2, 
+	color='r'
+	#edgecolor='black'
+	)
+
+plt.ylabel("count per block")
+plt.xlabel("height in cm")
+
+plt.show()
+
+
+#i am desperate for this to work 
+import numpy as np
+import matplotlib.pyplot as plt
+from scipy import stats
+
+N = 100
+x = stats.norm.rvs(loc=7,scale=1,size=N) #pull samples from standard dist
+num_bins = 7 #define how many different blocks
+new = []
+for val in x:
+	val = int(val)
+	new.append(val)
+x = np.array(new)
+
+plt.hist(x, bins=num_bins, facecolor='blue', alpha=0.5,edgecolor='black')
+
+y = np.linspace(4, 9, 1000)
+bin_width = (x.max() - x.min()) / num_bins
+plt.plot(y, stats.norm.pdf(y) * N * bin_width)
+
+plt.ylabel("# of blocks")
+plt.xlabel("height in cm")
+plt.show()
+
+
+
