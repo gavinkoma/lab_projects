@@ -2,72 +2,71 @@ import math
 import numpy as np
 import matplotlib.pyplot as plt
 import scipy.stats as ss
+import matplotlib.cm as cm
 from scipy.stats import norm 
+from scipy import stats
+from matplotlib.colors import Normalize
 
-#theres the dist
-mean = 15
-std = 5
-size = 200
-values = np.random.normal(mean,std,size)
-new = []
-for val in values:
-	val = int(val)
-	new.append(val)
-values = np.array(new)
+# N = 300
+# # x = np.random.randn(N)
+# x = stats.norm.rvs(7,size=N)
+# num_bins = 10
+# plt.hist(x, bins=num_bins, facecolor='blue', alpha=0.5,edgecolor='black')
+# plt.show()
 
-#here is the hist
-#plt.figure()
-#plt.hist(values,20,edgecolor='black')
-#plt.axvline(values.mean(),color='k',linestyle='dashed',linewidth=2)
-#plt.show()
+#now i want to make this a surface plot
+#lets start by generating some test data dn then we'll use our generated data
+x = np.random.randn(500)
+y = np.random.randn(500)
 
-plt.figure()
-labels, counts = np.unique(values, return_counts=True)
-plt.bar(labels, counts, align='center')
-plt.gca().set_xticks(labels)
+x = np.random.normal(15,20,500)
+y = np.random.normal(15,20,500)
+
+XY = np.stack((x,y),axis=-1)
+intergersx = []
+intergersy = []
+for val,oth in XY:
+	new = int(val)
+	new1 = int(oth)
+	intergersx.append(new)
+	intergersy.append(new1)
+intergersx = np.array(intergersx)
+intergersy = np.array(intergersy)
+XY = np.stack((intergersx,intergersx),axis=-1)
+
+XY_select = XY
+
+xAmplitudes = np.array(XY_select)[:,0]
+yAmplitudes = np.array(XY_select)[:,1]
+
+fig = plt.figure() #canvas
+ax = fig.add_subplot(111, projection='3d')
+
+hist, xedges, yedges = np.histogram2d(x, y, bins=(5,5), range = [[0,+30],[0,+30]]) #you can change your bins, and the range on which to take data
+#hist is a 5x5 matrix, with the populations for each of the subspace parts.
+xpos, ypos = np.meshgrid(xedges[:-1]+xedges[1:], yedges[:-1]+yedges[1:]) -(xedges[1]-xedges[0])
+
+xpos = xpos.flatten()*1./2
+ypos = ypos.flatten()*1./2
+zpos = np.zeros_like (xpos)
+
+dx = xedges [1] - xedges [0]
+dy = yedges [1] - yedges [0]
+dz = hist.flatten()
+
+cmap = cm.get_cmap('plasma') 
+
+max_height = np.max(dz)  
+min_height = np.min(dz)
+
+#scale each z to [0,1], and get their rgb values
+ynorm = (ypos-np.min(ypos))/(np.max(ypos)-np.min(ypos))
+rgba = [cmap(k) for k in ynorm] 
+
+ax.bar3d(xpos, ypos, zpos, dx, dy, dz, color=rgba, zsort='average')
+plt.title("Block Height")
+ax.set_xlabel('X')
+ax.set_ylabel('Y')
+ax.set_zlabel('Z (height cm)')
 plt.show()
-
-#lets add a line plot on top of it
-# mean and standard deviation 
-mu, std = norm.fit(values)  
-xmin, xmax = plt.xlim() 
-x = np.linspace(xmin, xmax, 100) 
-p = norm.pdf(x, mu, std) 
-  
-plt.plot(x, p, 'k', linewidth=2) 
-title = "Fit Values: {:.2f} and {:.2f}".format(mu, std) 
-plt.title(title) 
-  
-plt.show() 
-
-
-
-
-#im not entirely sure how to go about this
-def normal_dist():
-	return
-
-def histogram_generation():
-
-	return
-
-def surface_plot():
-
-	return
-
-def colorize():
-
-	return
-
-def stl_output():
-
-	return
-
-#done
-
-def main():
-	normal_dist()
-	return
-
-main()
 
