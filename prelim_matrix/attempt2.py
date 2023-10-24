@@ -16,11 +16,11 @@ from matplotlib.colors import Normalize
 
 #now i want to make this a surface plot
 #lets start by generating some test data dn then we'll use our generated data
-x = np.random.randn(500)
-y = np.random.randn(500)
+#x = np.random.randn(500)
+#y = np.random.randn(500)
 
-x = np.random.normal(15,20,500)
-y = np.random.normal(15,20,500)
+x = np.random.normal(15,15,500)
+y = np.random.normal(15,15,500)
 
 XY = np.stack((x,y),axis=-1)
 intergersx = []
