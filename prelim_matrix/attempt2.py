@@ -7,18 +7,6 @@ from scipy.stats import norm
 from scipy import stats
 from matplotlib.colors import Normalize
 
-# N = 300
-# # x = np.random.randn(N)
-# x = stats.norm.rvs(7,size=N)
-# num_bins = 10
-# plt.hist(x, bins=num_bins, facecolor='blue', alpha=0.5,edgecolor='black')
-# plt.show()
-
-#now i want to make this a surface plot
-#lets start by generating some test data dn then we'll use our generated data
-#x = np.random.randn(500)
-#y = np.random.randn(500)
-
 x = np.random.normal(15,15,500)
 y = np.random.normal(15,15,500)
 
@@ -42,7 +30,8 @@ yAmplitudes = np.array(XY_select)[:,1]
 fig = plt.figure() #canvas
 ax = fig.add_subplot(111, projection='3d')
 
-hist, xedges, yedges = np.histogram2d(x, y, bins=(5,5), range = [[0,+30],[0,+30]]) #you can change your bins, and the range on which to take data
+#you can change your bins, and the range on which to take data
+hist, xedges, yedges = np.histogram2d(x, y, bins=(5,5), range = [[0,+30],[0,+30]]) 
 #hist is a 5x5 matrix, with the populations for each of the subspace parts.
 xpos, ypos = np.meshgrid(xedges[:-1]+xedges[1:], yedges[:-1]+yedges[1:]) -(xedges[1]-xedges[0])
 

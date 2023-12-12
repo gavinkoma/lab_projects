@@ -104,8 +104,14 @@ def soot_ball_graph(grouped_data):
 	ax.set_zlabel('Z-axis')
 	ax.set_title('3D Line Plot of X, Y, Z Values')
 
+
+
 	plt.show()
 
+
+	plt.figure()
+	plt.plot(df['Z'])
+	plt.show()
 
 def over_distance(grouped_data):
 	#call dataframe
