@@ -1,0 +1,45 @@
+02.14.2024 (initial meeting notes regarding CB4 progression)
+
+
+stain for chat
+
+only take high mag of places of interest
+
+do a 5x first and then zoom into the areas of interest
+
+monosynaptic boutons are vGLUT1
+
+we also dont really need to see the DREADDs labeling because vGLUT1 are 1a neurons 
+
+action points:
+1. x animals one with mcherry
+	this could still do the triple stain of more connections
+2. 
+
+how many animals have motor nuerons that can be zoomed in on w/ vglut1 boutons can be counted. 
+
+can we get more by doing chat to label motor neurons
+
+how many have all three 
+
+theoretically we could just take the total count on a computer screen like nih imagej and look at green boutons that connect to the motor pools 
+
+2 sources, 1a's and corticospinal but no corticospinal because of lesion. so only vglut synapses 
+
+count puncta of vglut1 between controls and experimentals confirm this though with actual imaging of the motor neurons. cannot make determine if making connections with apical dendrites or cell bodies uhoh 
+
+normalize puncta to area --> motor pools will change per size so do a circle/elipsis ROI; we have confocal images of motor neurons with chat and colabeling them with vglut2 for proprioceptive but we will do vGLUT1
+
+confocal 20x
+
+ask ajay for extra tissue if needed at all in control cords --> normal extra control tissue and we have a ton 
+
+DRGs --> will be down the road 
+ 
+
+
+
+
+
+
+

@@ -6,9 +6,16 @@ new_data <- data.frame(data[, -1])  # Exclude the 'NewRowNames' column from the 
 rownames(new_data) <- new_row_names  # Set 'NewRowNames' as row names
 
 # Create a chord diagram with the matrix data
-chordDiagram(data, transparency = 0.5)
+chordDiagram(new_data, transparency = 0.5)
+
 
 # Load the circlize library
+data = read.csv('unsure.csv')
+new_row_names = data$X
+
+new_data <- data.frame(data[, -1])  # Exclude the 'NewRowNames' column from the new dataframe
+rownames(new_data) <- new_row_names  # Set 'NewRowNames' as row names
+
 library(circlize)
 
 # Assuming 'data' contains your 25x25 matrix data
