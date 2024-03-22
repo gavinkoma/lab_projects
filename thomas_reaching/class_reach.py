@@ -12,6 +12,13 @@ creation of csv of peak frame list tuple is created
 
 graph of one video was output to check, start with graph creation next
 
+march 22, 20204
+plot works, not sure why i need to call the function first prior to def
+automate pulling the rat name into the csv asap, that will help 
+need to ask what min frame before is --> peak frames need to be 
+	obtained for all in ms
+velocity calculations need to be done but in order to that we 
+	need to get the plexi_x and the plexi_y values from imageJ
 
 """
 import datetime
@@ -52,13 +59,17 @@ def file_pathway():
 
 	csv_filename = "file_data_{}.csv".format(now.strftime("%Y_%m_%d_%H_%M_%S"))
 	with open(csv_filename,'w',newline='') as csvfile:
-		fieldnames = ['file_path','peak_frame']
+		fieldnames = ['file_path','peak_frame','start_frame','num_frame','around_peak_frame','marker']
 		writer = csv.DictWriter(csvfile,fieldnames = fieldnames)
 
 		writer.writeheader()
 		for file_path,peak_frame in file_peak_frame_tuples:
 			writer.writerow({'file_path': file_path,
-							'peak_frame': peak_frame
+							'peak_frame': peak_frame,
+							'start_frame': int(0),
+							'num_frame': int(1000),
+							'around_peak_frame': int(200),
+							'marker': str('wrist')
 							})
 
 	print("CSV written succesfully!")
@@ -94,6 +105,12 @@ def load_file_():
 
 md,dfs = load_file_()
 
+def fixtheindex(df):
+	if isinstance(df.index[0],str):
+    	print("Fixing index.")
+    	df.index = range(0,len(df))
+	return(df)
+
 def plot_reach(fn):
 	df = pd.read_csv(fn,index_col = 0, header = [0,1,2])
 	df = fixtheindex(df)
@@ -115,15 +132,41 @@ def plot_reach(fn):
 	#axes[0].axhline(xwall)
 	#axes[1].axhline(700-ywall)
 	fig.savefig(fn.split('.')[0]+'.png')
-
 	return
 
+#we need to define the plexi_x and the plexi_y of the videos 
 ind=0
-plot_reach(md.iloc[ind]['file_path'],md.loc[ind,'plexi_x'],md.loc[ind,'plexi_y'])
+idx = pd.IndexSlice
+plot_reach(md.iloc[ind]['file_path'])#,md.loc[ind,'plexi_x'],md.loc[ind,'plexi_y'])
 plt.show()
 fn=md.iloc[ind]['file']
-xwall=md.loc[ind,'plexi_x']
-ywall=md.loc[ind,'plexi_y']
+#xwall=md.loc[ind,'plexi_x']
+#ywall=md.loc[ind,'plexi_y']
+
+def export_velo_data():
+
+xmin,ymin,xpk,ypk,rchdur,dx,dy,velx,vely =[],[],[],[],[],[],[],[],[]
+for ind in range(len(md)):
+	print(md.loc[ind,'file_path'])
+	df=pd.read_csv(md.loc[ind,'file_path'],index_col=0,header=[0,1,2])
+	df=fixtheindex(df)
+	df.columns=df.columns.droplevel('scorer')
+    xmin.append(df.loc[md['minframebef'][ind],idx[md['marker'][ind],'x']]/pixpermm)
+    ymin.append(df.loc[md['minframebef'][ind],idx[md['marker'][ind],'y']]/pixpermm)
+    xpk.append(df.loc[md['peakframe'][ind],idx[md['marker'][ind],'x']]/pixpermm)
+    ypk.append(df.loc[md['peakframe'][ind],idx[md['marker'][ind],'y']]/pixpermm)
+    rchdur.append( (md['peakframe'][ind] - md['minframebef'][ind])/fps )
+    dx.append( (xpk[-1]-xmin[-1])/pixpermm  )
+    dy.append( (ypk[-1]-ymin[-1])/pixpermm )
+    velx.append( dx[-1]/rchdur[-1] )
+    vely.append( dy[-1]/rchdur[-1] )
+mdwv=md.copy()
+mdwv=mdwv.assign(xmin=xmin,ymin=ymin,xpk=xpk,ypk=ypk,rchdur=rchdur,dx=dx,dy=dy,velx=velx,vely=vely)
+mdwv.to_csv('reachfiles_generated_wvelocities.csv')
+
+	# md=p
+	return
+
 
 
 
