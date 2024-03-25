@@ -45,6 +45,11 @@ def file_pathway():
 	x = x.split('\n')
 	x = x[:-1]
 
+	os_command = "find {} -type f -name '*.mp4'".format(pathway)
+	y = os.popen(os_command).read()
+	y = y.split('\n')
+	y_vid = y[:-1]
+
 	def prompt_peak_frame(file_path):
 	    peak_frame = input(f"For the file path '{file_path}', what is the peak frame? ")
 	    return peak_frame
@@ -71,12 +76,75 @@ def file_pathway():
 							'around_peak_frame': int(200),
 							'marker': str('wrist')
 							})
-
 	print("CSV written succesfully!")
+	return pathway,x,y_vid
 
-	return pathway,x
+pathway,x,y_vid = file_pathway()
 
-pathway,x = file_pathway()
+pathway = "/Users/gavinkoma/Documents/lab_projects/thomas_reaching/"
+
+#need to pull the most recent csv file here
+def pull_recent_csv(pathway):
+	# Read the existing CSV file
+	existing_data = []
+	with open("existing_file.csv", "r") as f:
+	    reader = csv.reader(f)
+	    for row in reader:
+	        existing_data.append(row)
+
+	# Check if the lengths match
+	if len(existing_data) != len(new_column_data):
+	    print("Lengths of existing data and new column data do not match.")
+	    exit()
+
+	# Add the new column to the existing data
+	for i, row in enumerate(existing_data):
+	    row.append(new_column_data[i])
+
+	# Write the modified data back to the CSV file
+	with open("existing_file.csv", "w", newline="") as f:
+	    writer = csv.writer(f)
+	    writer.writerows(existing_data)
+
+
+	return()
+
+
+
+
+
+def pull_frame(df):
+	file_paths_column = df['file_path']
+	import subprocess
+
+	def perform_action(directory):
+		# Your custom action here
+		print(f"Performing action in directory: {directory}")
+		# For example, you can list files in the directory or do any other operation
+		ffmpeg_command =[
+			"ffmpeg",
+			"-i",
+			file_path,
+			"-ss",
+			"1",
+			"-q:v",
+			"2",
+			directory]
+
+		subprocess.run(ffmpeg_command)
+
+	for file_path in file_paths_column:
+		directory = os.path.dirname(file_path)  # Extract the directory part of the file path
+	    if os.path.exists(directory) and os.path.isdir(directory):
+	        os.chdir(directory)  # Enter the directory
+	        perform_action(directory)  # Perform your action in the directory
+	        os.chdir('..')  # Move back to the parent directory
+		else:
+	    	print(f"Directory does not exist: {directory}")
+	return
+
+pull_frame(df)
+'''
 
 def load_file_():
 	idx = pd.IndexSlice
@@ -143,7 +211,9 @@ fn=md.iloc[ind]['file']
 #xwall=md.loc[ind,'plexi_x']
 #ywall=md.loc[ind,'plexi_y']
 
-def export_velo_data():
+
+'''
+
 
 xmin,ymin,xpk,ypk,rchdur,dx,dy,velx,vely =[],[],[],[],[],[],[],[],[]
 for ind in range(len(md)):
@@ -164,25 +234,6 @@ mdwv=md.copy()
 mdwv=mdwv.assign(xmin=xmin,ymin=ymin,xpk=xpk,ypk=ypk,rchdur=rchdur,dx=dx,dy=dy,velx=velx,vely=vely)
 mdwv.to_csv('reachfiles_generated_wvelocities.csv')
 
-	# md=p
-	return
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+'''
