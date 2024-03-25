@@ -39,6 +39,24 @@ def file_pathway():
 	# using negative indexing
 	pathway = pathway[:-1]
 	print(pathway+"/")
+	root_directory = pathway
+
+	def get_csv_paths(root_dir):
+		data = []
+
+		#walk through
+		for root, dirs, files in os.walk(root_dir):
+			for file in files:
+				if file.endswith(".csv"):
+					rel_path = os.path.relpath(root,start=root_dir)
+					dirs_list = rel_path.split(os.path.sep)
+					dirs_list.append(file)
+					data.append(dirs_list)
+
+		return data
+
+	csv_file_paths = get_csv_paths(root_directory)
+	df = pd.DataFrame(csv_file_paths)
 
 	os_command = "find {} -type f -name '*.csv'".format(pathway)
 	x = os.popen(os_command).read()
@@ -51,100 +69,140 @@ def file_pathway():
 	y_vid = y[:-1]
 
 	def prompt_peak_frame(file_path):
-	    peak_frame = input(f"For the file path '{file_path}', what is the peak frame? ")
-	    return peak_frame
+	   peak_frame = input(f"For the file path '{file_path}', what is the peak frame? ")
+	   return peak_frame
 
 	file_peak_frame_tuples = []
-	for file_path in x:
-		peak_frame = prompt_peak_frame(file_path)
-		file_peak_frame_tuples.append((file_path,peak_frame))
+
+	for input_ in x:
+		#print(input_)
+		peak_frame = prompt_peak_frame(input_)
+		file_peak_frame_tuples.append((input_,peak_frame))
 
 	for file_path, peak_frame in file_peak_frame_tuples:
 		print(file_path, "-> Peak Frame:",peak_frame)
 
+	df = df.rename(columns={0:'exp_type'})
+	df = df.rename(columns={1:'ratnum'})
+	df = df.rename(columns={2:'date'})
+	df = df.rename(columns={3:'csv_name'})
+
+	file_peak_frame_tuples = pd.DataFrame(file_peak_frame_tuples)
+	file_peak_frame_tuples = file_peak_frame_tuples.rename(columns={0:'file_path'})
+	file_peak_frame_tuples = file_peak_frame_tuples.rename(columns={1:'peak_frame'})
+	tryatt = pd.concat([df,file_peak_frame_tuples],axis=1)
+
+	length = len(tryatt)
+	tryatt['start_frame'] = 0
+	tryatt['num_frame'] = 1000
+	tryatt['around_peak_frame']= 200
+	tryatt['marker'] = 'wrist'
+	tryatt['plexi_x'] = ''
+	tryatt['plexi_y'] = ''
+	tryatt['plexipixwidth'] = ''
+	tryatt['pixpermm'] = ''
+	
+
 	csv_filename = "file_data_{}.csv".format(now.strftime("%Y_%m_%d_%H_%M_%S"))
-	with open(csv_filename,'w',newline='') as csvfile:
-		fieldnames = ['file_path','peak_frame','start_frame','num_frame','around_peak_frame','marker']
-		writer = csv.DictWriter(csvfile,fieldnames = fieldnames)
 
-		writer.writeheader()
-		for file_path,peak_frame in file_peak_frame_tuples:
-			writer.writerow({'file_path': file_path,
-							'peak_frame': peak_frame,
-							'start_frame': int(0),
-							'num_frame': int(1000),
-							'around_peak_frame': int(200),
-							'marker': str('wrist')
-							})
+	tryatt.to_csv(csv_filename,index=False)
 	print("CSV written succesfully!")
-	return pathway,x,y_vid
 
-pathway,x,y_vid = file_pathway()
+	return df
 
-pathway = "/Users/gavinkoma/Documents/lab_projects/thomas_reaching/"
-
-#need to pull the most recent csv file here
-def pull_recent_csv(pathway):
-	# Read the existing CSV file
-	existing_data = []
-	with open("existing_file.csv", "r") as f:
-	    reader = csv.reader(f)
-	    for row in reader:
-	        existing_data.append(row)
-
-	# Check if the lengths match
-	if len(existing_data) != len(new_column_data):
-	    print("Lengths of existing data and new column data do not match.")
-	    exit()
-
-	# Add the new column to the existing data
-	for i, row in enumerate(existing_data):
-	    row.append(new_column_data[i])
-
-	# Write the modified data back to the CSV file
-	with open("existing_file.csv", "w", newline="") as f:
-	    writer = csv.writer(f)
-	    writer.writerows(existing_data)
-
-
-	return()
+df = file_pathway()
 
 
 
 
 
-def pull_frame(df):
-	file_paths_column = df['file_path']
-	import subprocess
 
-	def perform_action(directory):
-		# Your custom action here
-		print(f"Performing action in directory: {directory}")
-		# For example, you can list files in the directory or do any other operation
-		ffmpeg_command =[
-			"ffmpeg",
-			"-i",
-			file_path,
-			"-ss",
-			"1",
-			"-q:v",
-			"2",
-			directory]
 
-		subprocess.run(ffmpeg_command)
-
-	for file_path in file_paths_column:
-		directory = os.path.dirname(file_path)  # Extract the directory part of the file path
-	    if os.path.exists(directory) and os.path.isdir(directory):
-	        os.chdir(directory)  # Enter the directory
-	        perform_action(directory)  # Perform your action in the directory
-	        os.chdir('..')  # Move back to the parent directory
-		else:
-	    	print(f"Directory does not exist: {directory}")
-	return
-
-pull_frame(df)
 '''
+def get_csv_paths(root_dir):
+	date = []
+
+	#walk through
+	for root, dirs, files in os.walk(root_dir):
+		for file in files:
+			if file.endswith(".csv"):
+				rel_path = os.path.relpath(root,start=root_dir)
+				dirs_list = rel_path.split(os.path.sep)
+				dirs_list.append(file)
+				data.append(dirs_list)
+
+	return data
+'''
+
+
+csv_file_paths = get_csv_paths(root_directory)
+df = pd.DataFrame(csv_file_paths)
+
+def read_most_recent_csv(directory_path):
+    # Get a list of all CSV files in the directory
+    csv_files = [file for file in os.listdir(directory_path) if file.endswith(".csv")]
+
+    # If there are CSV files in the directory
+    if csv_files:
+        # Find the most recent CSV file based on modification time
+        most_recent_file = max(csv_files, key=lambda x: os.path.getmtime(os.path.join(directory_path, x)))
+        
+        # Construct the full path to the most recent CSV file
+        most_recent_file_path = os.path.join(directory_path, most_recent_file)
+        
+        # Read the most recent CSV file into a pandas DataFrame
+        df = pd.read_csv(most_recent_file_path)
+        
+        return df,most_recent_file_path
+
+    else:
+        print("No CSV files found in the directory.")
+        return None
+
+
+#output the first frame of every video
+directory_path = '/Users/gavinkoma/Documents/lab_projects/thomas_reaching'
+df,most_recent_file_path = read_most_recent_csv(directory_path)
+# print(most_recent_file)
+y_vid = pd.DataFrame(y_vid)
+y_vid.columns = ['video_path']
+df = pd.concat([df,y_vid],axis = 1)
+df["plexi_x"] = ''
+df["plexi_y"] = ''
+df.to_csv(most_recent_file_path,index = False)
+
+
+
+#this will be used to pull a file name from every video in the subdirectories. 
+def extract_first_frame(video_path):
+	video_directory = os.path.dirname(video_path)
+	os.chdir(video_directory)
+
+	video_filename = os.path.basename(video_path)
+	video_name_without_extension = os.path.splitext(video_filename)[0]
+
+	output_file_name = f"{video_name_without_extension}.jpg"
+
+		# Run ffmpeg command to extract the first frame
+    ffmpeg_command = [
+        "ffmpeg",
+        "-i", video_filename,
+        "-ss", "00:00:01",  # Time to extract frame from (adjust as needed)
+        "-vframes", "1",     # Number of frames to extract
+        "-q:v", "2",         # Quality of the extracted frame
+        output_file_name
+    ]
+
+    subprocess.run(ffmpeg_command)
+
+video_paths = df["video_path"]
+for video_path in video_paths:
+	extract_first_frame(video_path)
+
+
+
+
+
 
 def load_file_():
 	idx = pd.IndexSlice
@@ -212,9 +270,9 @@ fn=md.iloc[ind]['file']
 #ywall=md.loc[ind,'plexi_y']
 
 
+
+
 '''
-
-
 xmin,ymin,xpk,ypk,rchdur,dx,dy,velx,vely =[],[],[],[],[],[],[],[],[]
 for ind in range(len(md)):
 	print(md.loc[ind,'file_path'])
@@ -233,7 +291,4 @@ for ind in range(len(md)):
 mdwv=md.copy()
 mdwv=mdwv.assign(xmin=xmin,ymin=ymin,xpk=xpk,ypk=ypk,rchdur=rchdur,dx=dx,dy=dy,velx=velx,vely=vely)
 mdwv.to_csv('reachfiles_generated_wvelocities.csv')
-
-
-
 '''
