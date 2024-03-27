@@ -1,0 +1,16 @@
+camera: VENDOR: Ximea Device Name: MQ022CG-CM Type: USB3.0
+image_width: 2048
+image_height: 700
+pixel_depth: 1 ADDUNITS
+bayer_pattern: XI_CFA_BAYER_GBRG
+exposure_time: 2000 CHECKUNITS
+trig_state: 0
+timeout: 5000 CHECKUNITS
+param_val: 0
+colorproc: 1
+compress: YES
+trigger_time: 1708632798.527387
+dump_type: ENDTRIG
+tmillpc_trig_posixtime: 1708632798.526339
+dump_id: 6
+trig_delta: 0.001048
