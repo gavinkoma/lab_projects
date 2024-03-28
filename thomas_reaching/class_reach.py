@@ -332,8 +332,8 @@ idx=pd.IndexSlice
 fps=250
 md=pd.read_csv("file_data_2024_03_26_13_40_28.csv")
 # workin ghere
-f=plt.figure(2)
-f.clf()
+f,ax=plt.subplots()
+#f.clf()
 #f.set_figheight(1.32)
 #f.set_figwidth(2.87)
 #f=plt.figure(figsize=(2.87,1,32))
@@ -350,10 +350,12 @@ for ind in range(len(md)):
   if md.loc[ind,'goodbad']=='good':
     repdf=md.loc[[ind]*len(rng)].reset_index() # repeated meta entries of md
     repdf['frame']=repdf.index
-    newdf=(dfs[ind].loc[rng,idx[:,md.loc[ind,'marker'],'x']].reset_index() - md.loc[ind,'plexi_x'])/md.loc[ind,'pixpermm']
-    newdf.columns=newdf.columns.droplevel([0,1])
-    newdf['frame']=newdf.index
     outdf=newdf.join(repdf,on='frame',rsuffix='_md').rename({'exp_type':'treatment'},axis='columns')
+    if md.loc[ind,'handedness'] == 'left':
+	    outdf['x'] = -outdf['x']
+	    newdf=(dfs[ind].loc[rng,idx[:,md.loc[ind,'marker'],'x']].reset_index() - md.loc[ind,'plexi_x'])/md.loc[ind,'pixpermm']
+	  	newdf.columns=newdf.columns.droplevel([0,1])
+	    newdf['frame']=newdf.index
     #outdf['time']=(outdf['frame']-md.loc[ind,'aroundpeakframes']/2)/fps
     outdf['time']=(outdf['frame'])/fps
     if any(np.isnan(outdf['x'])):
@@ -363,9 +365,9 @@ for ind in range(len(md)):
     #plt.plot( outdf['time'], outdf['time'], c=cols[md.loc[ind,'exp_type']], label=legendlabs[md.loc[ind,'exp_type']] )
     # should plot outdf here not xco!
     plt.plot( outdf['time'], outdf['x'], \
-      c=cols[md.loc[ind,'exp_type']], label=legendlabs[md.loc[ind,'exp_type']] )
-    plt.text( outdf['time'][round(md.loc[ind,'around_peak_frame']/4)], outdf['x'][round(md.loc[ind,'around_peak_frame']/4)], 
-    	str(ind) )
+      c=cols[md.loc[ind,'exp_type']] , label=legendlabs[md.loc[ind,'exp_type']] )
+   # plt.text( outdf['time'][round(md.loc[ind,'around_peak_frame']/4)], outdf['x'][round(md.loc[ind,'around_peak_frame']/4)], 
+   # 	str(ind) )
     #plt.plot( outdf['time'], np.array(xco.iloc[rng].droplevel([0,1],axis='columns')), \
     #  c=cols[md.loc[ind,'exp_type']], label=legendlabs[md.loc[ind,'exp_type']] )
     legendlabs[md.loc[ind,'exp_type']]='_'+legendlabs[md.loc[ind,'exp_type']]
@@ -376,6 +378,7 @@ for ind in range(len(md)):
 plt.axhline(0)
 plt.xlabel('time (s)')
 plt.ylabel('wrist x (mm)')
+w = ax.invert_yaxis()
 plt.legend(title='treatment')
 plt.title('Individual reaches by treatment')
 plt.annotate('Wall', xy=(0.2, 0),  xycoords='data',
