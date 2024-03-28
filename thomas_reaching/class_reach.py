@@ -326,6 +326,7 @@ print("total left hand df: " + str(count))
 # STUFF BELOW WORKING
 # TODO
 # 1. In code below, after newdf=(dfs[ind].loc[rng,idx[:,md.loc[ind,'marker'],'x']].reset_index() - md.loc[ind,'plexi_x'])/md.loc[ind,'pixpermm']
+#need to get origin first and then do this 
 # do if(hand==left) then x=-x.
 idx=pd.IndexSlice
 fps=250
@@ -405,110 +406,6 @@ plt.savefig('meansdreach_x.pdf')
 
 
 ## end stuff we got through.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-# %% okay laod them on to same time
-dfs=[]
-idx=pd.IndexSlice
-for ind in range(len(md)):
-  df=pd.read_csv(md.loc[ind,'file_path'],index_col=0,header=[0,1,2])
-  df=fixtheindex(df)
-  df.loc[:,idx[:,:,['x','y']]]=df.loc[:,idx[:,:,['x','y']]].rolling(6,center=True).mean()
-  dfs.append(df)
-
-
-# %% function that loads and plots one file
-def plotreachkinfile(fn,xwall,ywall):
-  df=pd.read_csv(fn,index_col=0,header=[0,1,2])
-  # some files have file names as the index, manually annotated i think.
-  # fix...
-  #if isinstance(df.index[0],str):
-  #  print("Fixing index.")
-  #  df.index = range(0,len(df))
-  df=fixtheindex(df)
-  # plot the x coords and
-  # get x and y coordinates
-  xco = df.loc[:,idx[:,:,'x']]
-  yco = df.loc[:,idx[:,:,'y']]
-  # plot it up:
-  fig, axes = plt.subplots(nrows=2, ncols=1)
-  xco.plot(ax=axes[0])
-  yco.plot(ax=axes[1])
-  fig.suptitle(fn,fontsize=4)
-  axes[0].set_ylabel('x coord')
-  axes[1].set_xlabel('frame')
-  axes[1].set_ylabel('y coord')
-  axes[1].invert_yaxis()
-  # save it
-  axes[0].axhline(xwall)
-  axes[1].axhline(700-ywall)
-  fig.savefig(fn.split('.')[0]+'.png')
-  #plt.show()
-
-if 0:
-  ind=0
-  plotreachkinfile(md.iloc[ind]['file'],md.loc[ind,'plexi_x'],md.loc[ind,'plexi_y'])
-  plt.show()
-  fn=md.iloc[ind]['file']
-  xwall=md.loc[ind,'plexi_x']
-  ywall=md.loc[ind,'plexi_y']
-
-f=plt.figure(2)
-f.clf()
-
-#we have metadata loaded
-#clean the NaNs from the list of dataframes
-#cleaned_df_list = [df.fillna(0) for df in dfs]
-fps=250
-f=plt.figure(2)
-f.clf()
-md = pd.read_csv(most_recent_file_path)
-cols={'preinj':'green','post_slash':'blue','postDTA':'red'}
-subs=[]
-legendlabs = dict(zip(md.loc[:,'exp_type'].unique(),md.loc[:,'exp_type'].unique()))
-for ind in range(len(md)):
-	rng=range(round((md.loc[ind,'peak_frame']-(md.loc[ind,'around_peak_frame']/2))),round((md.loc[ind,'peak_frame']+(md.loc[ind,'around_peak_frame']/2))))
-if md.loc[ind,'goodbad']=='good': #and md.loc[ind,'handedness']=='right':
-	repdf=md.loc[[ind]*len(rng)].reset_index() # repeated meta entries of md
-	repdf['frame']=repdf.index
-	newdf=(dfs[ind].loc[rng,idx[:,md.loc[ind,'marker'],'x']].reset_index() - md.loc[ind,'plexi_x'])/md.loc[ind,'pixpermm']
-	newdf.columns=newdf.columns.droplevel([0,1])
-	newdf['frame']=newdf.index
-	outdf=newdf.join(repdf,on='frame',rsuffix='_md').rename({'exp_type':'treatment'},axis='columns')
-	outdf['time']=(outdf['frame'])/fps
-	if any(np.isnan(outdf['x'])):
-		print('Found nans in ',md.loc[0,'file_path'], ' interpolating...')
-		outdf['x']=outdf['x'].interpolate()
-	subs.append(outdf)
-	plt.plot( outdf['time'], outdf['x'], c=cols[md.loc[ind,'exp_type']], label=legendlabs[md.loc[ind,'exp_type']] )
-	legendlabs[md.loc[ind,'exp_type']]='_'+legendlabs[md.loc[ind,'exp_type']]
-
 
 '''
 plt.axhline(0)
