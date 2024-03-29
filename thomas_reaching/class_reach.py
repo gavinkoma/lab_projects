@@ -350,12 +350,12 @@ for ind in range(len(md)):
   if md.loc[ind,'goodbad']=='good':
     repdf=md.loc[[ind]*len(rng)].reset_index() # repeated meta entries of md
     repdf['frame']=repdf.index
-    outdf=newdf.join(repdf,on='frame',rsuffix='_md').rename({'exp_type':'treatment'},axis='columns')
+		newdf=(dfs[ind].loc[rng,idx[:,md.loc[ind,'marker'],'x']].reset_index() - md.loc[ind,'plexi_x'])/md.loc[ind,'pixpermm']
+		newdf.columns=newdf.columns.droplevel([0,1])
+	  newdf['frame']=newdf.index
+	  outdf=newdf.join(repdf,on='frame',rsuffix='_md').rename({'exp_type':'treatment'},axis='columns')
     if md.loc[ind,'handedness'] == 'left':
 	    outdf['x'] = -outdf['x']
-	    newdf=(dfs[ind].loc[rng,idx[:,md.loc[ind,'marker'],'x']].reset_index() - md.loc[ind,'plexi_x'])/md.loc[ind,'pixpermm']
-	  	newdf.columns=newdf.columns.droplevel([0,1])
-	    newdf['frame']=newdf.index
     #outdf['time']=(outdf['frame']-md.loc[ind,'aroundpeakframes']/2)/fps
     outdf['time']=(outdf['frame'])/fps
     if any(np.isnan(outdf['x'])):
@@ -381,8 +381,8 @@ plt.ylabel('wrist x (mm)')
 w = ax.invert_yaxis()
 plt.legend(title='treatment')
 plt.title('Individual reaches by treatment')
-plt.annotate('Wall', xy=(0.2, 0),  xycoords='data',
-            xytext=(0.2, 10), textcoords='data',
+plt.annotate('Pellet', xy=(0.4, 2),  xycoords='data',
+            xytext=(0.3, 2), textcoords='data',
             arrowprops=dict(facecolor='black', shrink=0.05),
             horizontalalignment='center', verticalalignment='center',
             )
@@ -393,39 +393,114 @@ plt.savefig('indivreach_x.pdf')
 # try the seaborn
 # %% plot with shaded errors
 # Plot the responses for different events and regions
-f3=plt.figure(3)
+f3,ax=plt.subplots()
 f3.clf()
 sns.lineplot(x="time", y="x",ci="sd",hue="treatment",palette=cols,data=ad)
 plt.axhline(0)
 plt.xlabel('time (s)')
 plt.ylabel('wrist x (mm)')
 plt.title('Mean $\pm$ S.D. reaches by treatment')
-plt.annotate('Wall', xy=(0.2, 0),  xycoords='data',
-            xytext=(0.2, 10), textcoords='data',
+plt.annotate('Pellet', xy=(0.4, 2),  xycoords='data',
+            xytext=(0.50, 10), textcoords='data',
             arrowprops=dict(facecolor='black', shrink=0.05),
             horizontalalignment='center', verticalalignment='center',
             )
+ax = plt.gca()
+ax.invert_yaxis()
 plt.savefig('meansdreach_x.pdf')
-
 
 ## end stuff we got through.
 
-'''
+
+## lets just quickly change variables and make it y
+## ill make it nice and pretty in function format later
+
+
+idx=pd.IndexSlice
+fps=250
+md=pd.read_csv("file_data_2024_03_26_13_40_28.csv")
+# workin ghere
+f,ax=plt.subplots()
+#f.clf()
+#f.set_figheight(1.32)
+#f.set_figwidth(2.87)
+#f=plt.figure(figsize=(2.87,1,32))
+#cols={'inhib':'green','control':'blue','excite':'red','norm':'black'}
+subs=[]
+cols = {'preinj': 'blue', 'post_slash': 'green', 'postDTA': 'red'}
+# create mapping of unique treatments to themselves
+legendlabs = dict(zip(md.loc[:,'exp_type'].unique(),md.loc[:,'exp_type'].unique()))
+for ind in range(len(md)):
+  rng=range(round((md.loc[ind,'peak_frame']-(md.loc[ind,'around_peak_frame']/2))), \
+      round((md.loc[ind,'peak_frame']+(md.loc[ind,'around_peak_frame']/2))))
+  # YIKES should not do this here and below in newdf for export... should be same compute...
+  #xco=(dfs[ind].loc[:,idx[:,md.loc[ind,'marker'],'x']] - md.loc[ind,'plexi_x'])/md.loc[ind,'pixpermm']
+  if md.loc[ind,'goodbad']=='good':
+    repdf=md.loc[[ind]*len(rng)].reset_index() # repeated meta entries of md
+    repdf['frame']=repdf.index
+		newdf=(dfs[ind].loc[rng,idx[:,md.loc[ind,'marker'],'y']].reset_index() - md.loc[ind,'plexi_y'])/md.loc[ind,'pixpermm']
+		newdf.columns=newdf.columns.droplevel([0,1])
+	  newdf['frame']=newdf.index
+	  outdf=newdf.join(repdf,on='frame',rsuffix='_md').rename({'exp_type':'treatment'},axis='columns')
+    #if md.loc[ind,'handedness'] == 'left':
+	  #  outdf['y'] = -outdf['y']
+    #outdf['time']=(outdf['frame']-md.loc[ind,'aroundpeakframes']/2)/fps
+    outdf['time']=(outdf['frame'])/fps
+    if any(np.isnan(outdf['y'])):
+      print('Found nans in ',md.loc[0,'file'], ' interpolating...')
+      outdf['y']=outdf['y'].interpolate()
+    subs.append(outdf)
+    #plt.plot( outdf['time'], outdf['time'], c=cols[md.loc[ind,'exp_type']], label=legendlabs[md.loc[ind,'exp_type']] )
+    # should plot outdf here not xco!
+    plt.plot( outdf['time'], outdf['y'], \
+      c=cols[md.loc[ind,'exp_type']] , label=legendlabs[md.loc[ind,'exp_type']] )
+   # plt.text( outdf['time'][round(md.loc[ind,'around_peak_frame']/4)], outdf['x'][round(md.loc[ind,'around_peak_frame']/4)], 
+   # 	str(ind) )
+    #plt.plot( outdf['time'], np.array(xco.iloc[rng].droplevel([0,1],axis='columns')), \
+    #  c=cols[md.loc[ind,'exp_type']], label=legendlabs[md.loc[ind,'exp_type']] )
+    legendlabs[md.loc[ind,'exp_type']]='_'+legendlabs[md.loc[ind,'exp_type']]
+#    plt.plot( range(md.loc[ind,'aroundpeakframes']), \
+#      xco.loc[ round((md.loc[ind,'peakframe']-(md.loc[ind,'aroundpeakframes']/2))): \
+#      round((md.loc[ind,'peakframe']+(md.loc[ind,'aroundpeakframes']/2))-1) ], c=cols[md.loc[ind,'exp_type']])
+#plt.axhline(md.loc[1,'plexi_x'])
 plt.axhline(0)
 plt.xlabel('time (s)')
-plt.ylabel('wrist x (mm)')
+plt.ylabel('wrist y (mm)')
+w = ax.invert_yaxis()
 plt.legend(title='treatment')
 plt.title('Individual reaches by treatment')
-plt.annotate('Wall', xy=(0.2, 0),  xycoords='data',
-            xytext=(0.2, 10), textcoords='data',
+plt.annotate('Pellet', xy=(0.4, 2),  xycoords='data',
+            xytext=(0.3, 2), textcoords='data',
             arrowprops=dict(facecolor='black', shrink=0.05),
             horizontalalignment='center', verticalalignment='center',
             )
 ad = pd.concat(subs).reset_index()
-ad.to_csv('alldata_x.csv')
-plt.savefig('indivreach_x.pdf')
-'''
+ad.to_csv('alldata_y.csv')
+plt.savefig('indivreach_y.pdf')
 
+# try the seaborn
+# %% plot with shaded errors
+# Plot the responses for different events and regions
+f3,ax=plt.subplots()
+f3.clf()
+sns.lineplot(x="time", y="y",ci="sd",hue="treatment",palette=cols,data=ad)
+plt.axhline(0)
+plt.xlabel('time (s)')
+plt.ylabel('wrist y (mm)')
+plt.title('Mean $\pm$ S.D. reaches by treatment')
+plt.annotate('Wall', xy=(0.4, 2),  xycoords='data',
+            xytext=(0.50, 10), textcoords='data',
+            arrowprops=dict(facecolor='black', shrink=0.05),
+            horizontalalignment='center', verticalalignment='center',
+            )
+ax = plt.gca()
+ax.invert_yaxis()
+plt.savefig('meansdreach_y.pdf')
+
+
+
+##we need to pull the min and max
+# and also pull ranges of experiment
 
 
 
