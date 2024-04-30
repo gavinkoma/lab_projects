@@ -1,2 +1,6 @@
+#in order to recursively remove all the stupid .DS_Store files:
+# find . -name .DS_Store -print0 | xargs -0 git rm -f --ignore-unmatch
+
 *.mp4
+
 .DS_Store
