@@ -23,7 +23,8 @@ def match_cam1_cam2(csv_files):
 			cam2_files.append(filename)
 
 	all_video_dic = {'camera1':cam1_files,
-					'camera2':[]}
+					'camera2':[]
+					}
 	for filename in cam1_files:
 		#print(filename)
 		pattern2 = r'\d{4}-\d{2}-\d{2}_\d{2}_\d{2}_\d{2}'
@@ -43,26 +44,20 @@ def match_cam1_cam2(csv_files):
 		#all_video_list['camera1'] = all_video_list.get('camera1') + filename
 		all_video_dic['camera2'] = all_video_dic.get('camera2') + file_match
 
+
 	
 	return all_video_dic
 
-def match_files():
+if __name__ == "__main__":
+#def match_files():
 	path = get_directory()
 	csv_files = list_csv_files(path)
 	all_video_dic = match_cam1_cam2(csv_files)
 	#print(len(csv_files))
 	#return csv_files
 
-match_files()
+#match_files()
 
-	# for file2 in cam2_files:
-	# 	#print(file2)
-	# 	matches = re.findall(pattern2, file2)
-	# 	print(matches)
-	# 	if len(matches) > 0:
-	# 		file_match = file2
-	# 		break
-	# 	#print(file_match)
 
 
 
