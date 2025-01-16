@@ -59,3 +59,31 @@ ax.set_ylabel('Y')
 ax.set_zlabel('Z (height cm)')
 plt.show()
 
+#alright now i need to pass the vertices to triangulate a mesh
+#the mesh then needs to output a .stl file
+#and the .stl file needs to be all purrrty in fusion 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
