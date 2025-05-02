@@ -1,0 +1,90 @@
+
+import os
+
+# Define your folder paths
+videos_dir = "/path/to/videos"
+labeled_data_dir = "/path/to/labeled-data"
+
+# Paste your config list here
+config_videos = [
+    "/full/path/to/video1.mp4",
+    "/full/path/to/video2.mp4",
+    # ...
+]
+
+# 1. Get base names (no .mp4) from config
+config_names = {os.path.splitext(os.path.basename(p))[0] for p in config_videos}
+
+# 2. Get actual .mp4 files from videos/ (no extension)
+actual_videos = {
+    os.path.splitext(f)[0]
+    for f in os.listdir(videos_dir)
+    if f.endswith(".mp4")
+}
+
+# 3. Get folder names from labeled-data/
+labeled_folders = {
+    f for f in os.listdir(labeled_data_dir)
+    if os.path.isdir(os.path.join(labeled_data_dir, f))
+}
+
+# ---- 5 CHECKS ----
+
+# A. Config names missing in videos/
+missing_in_videos = config_names - actual_videos
+
+# B. Config names missing in labeled-data/
+missing_in_labeled = config_names - labeled_folders
+
+# C. Extra video files not in config
+extra_in_videos = actual_videos - config_names
+
+# D. Extra folders not in config
+extra_in_labeled = labeled_folders - config_names
+
+# E. Videos in videos/ with no matching folder in labeled-data
+videos_missing_labeled = actual_videos - labeled_folders
+
+# ---- OUTPUT ----
+
+if missing_in_videos:
+    print("❌ In config but missing in 'videos/':")
+    for name in sorted(missing_in_videos):
+        print(f"  - {name}.mp4")
+
+if missing_in_labeled:
+    print("\n❌ In config but missing in 'labeled-data/':")
+    for name in sorted(missing_in_labeled):
+        print(f"  - {name}/")
+
+if extra_in_videos:
+    print("\n⚠️ Extra .mp4s in 'videos/' not listed in config:")
+    for name in sorted(extra_in_videos):
+        print(f"  - {name}.mp4")
+
+if extra_in_labeled:
+    print("\n⚠️ Extra folders in 'labeled-data/' not listed in config:")
+    for name in sorted(extra_in_labeled):
+        print(f"  - {name}/")
+
+if videos_missing_labeled:
+    print("\n⚠️ Files in 'videos/' with no corresponding folder in 'labeled-data/':")
+    for name in sorted(videos_missing_labeled):
+        print(f"  - {name}.mp4")
+
+if not (
+    missing_in_videos
+    or missing_in_labeled
+    or extra_in_videos
+    or extra_in_labeled
+    or videos_missing_labeled
+):
+    print("✅ All entries match across config, videos/, and labeled-data/")
+
+
+
+
+
+
+
+"/home/spencelab/lvn_project/10_11_2024/camera1/rat0/beforecno/speed40/2024-10-11_14_05_57_Mocap-Computer-1/2024-10-11_14_05_57_Mocap-Computer-1_wbgam_h264.mp4","/home/spencelab/lvn_project/10_11_2024/camera1/rat1/beforecno/speed60/2024-10-11_16_05_34_Mocap-Computer-1/2024-10-11_16_05_34_Mocap-Computer-1_wbgam_h264.mp4","/home/spencelab/lvn_project/10_11_2024/camera1/rat1/aftercno/speed40/2024-10-11_18_44_29_Mocap-Computer-1/2024-10-11_18_44_29_Mocap-Computer-1_wbgam_h264.mp4","/home/spencelab/lvn_project/10_11_2024/camera2/rat0/beforecno/speed40/2024-10-11_14_05_57_Mocap-Computer-2/2024-10-11_14_05_57_Mocap-Computer-2_wbgam_h264.mp4","/home/spencelab/lvn_project/10_11_2024/camera2/rat1/beforecno/speed80/2024-10-11_16_07_10_Mocap-Computer-2/2024-10-11_16_07_10_Mocap-Computer-2_wbgam_h264.mp4","/home/spencelab/lvn_project/10_11_2024/camera3/rat0/beforecno/speed40/2024-10-11_14_05_57_Mocap-Computer-3/2024-10-11_14_05_57_Mocap-Computer-3_wbgam_h264.mp4","/home/spencelab/lvn_project/10_11_2024/camera3/rat1/aftercno/speed40/2024-10-11_18_44_29_Mocap-Computer-3/2024-10-11_18_44_29_Mocap-Computer-3_wbgam_h264.mp4","/home/spencelab/lvn_project/10_11_2024/camera3/rat1/beforecno/speed80/2024-10-11_16_07_10_Mocap-Computer-3/2024-10-11_16_07_10_Mocap-Computer-3_wbgam_h264.mp4","/home/spencelab/lvn_project/10_11_2024/camera4/rat0/beforecno/speed40/2024-10-11_14_05_57_Mocap-Computer-4/2024-10-11_14_05_57_Mocap-Computer-4_wbgam_h264.mp4","/home/spencelab/lvn_project/10_11_2024/camera4/rat0/aftercno/speed40/2024-10-11_18_06_12_Mocap-Computer-4/2024-10-11_18_06_12_Mocap-Computer-4_wbgam_h264.mp4","/home/spencelab/lvn_project/10_11_2024/camera4/rat1/aftercno/speed40/2024-10-11_18_44_29_Mocap-Computer-4/2024-10-11_18_44_29_Mocap-Computer-4_wbgam_h264.mp4","/home/spencelab/lvn_project/10_11_2024/camera4/rat1/beforecno/speed60/2024-10-11_16_04_29_Mocap-Computer-4/2024-10-11_16_04_29_Mocap-Computer-4_wbgam_h264.mp4","/home/spencelab/lvn_project/10_15_2024/camera3/rat0/aftercno/speed40/2024-10-15_17_38_28_Mocap-Computer-3/2024-10-15_17_38_28_Mocap-Computer-3_wbgam_h264.mp4","/home/spencelab/lvn_project/10_15_2024/camera2/rat1/beforecno/speed40/2024-10-15_13_40_43_Mocap-Computer-2/2024-10-15_13_40_43_Mocap-Computer-2_wbgam_h264.mp4","/home/spencelab/lvn_project/10_15_2024/camera2/rat0/beforecno/speed32/2024-10-15_14_38_03_Mocap-Computer-2/2024-10-15_14_38_03_Mocap-Computer-2_wbgam_h264.mp4","/home/spencelab/lvn_project/10_15_2024/camera3/rat1/aftercno/speed40/2024-10-15_17_04_51_Mocap-Computer-3/2024-10-15_17_04_51_Mocap-Computer-3_wbgam_h264.mp4","/home/spencelab/lvn_project/10_15_2024/camera2/rat0/aftercno/speed32/2024-10-15_17_32_25_Mocap-Computer-2/2024-10-15_17_32_25_Mocap-Computer-2_wbgam_h264.mp4","/home/spencelab/lvn_project/10_15_2024/camera3/rat0/aftercno/speed32/2024-10-15_17_33_50_Mocap-Computer-3/2024-10-15_17_33_50_Mocap-Computer-3_wbgam_h264.mp4","/home/spencelab/lvn_project/10_15_2024/camera4/rat0/beforecno/speed32/2024-10-15_14_34_16_Mocap-Computer-4/2024-10-15_14_34_16_Mocap-Computer-4_wbgam_h264.mp4","/home/spencelab/lvn_project/10_15_2024/camera4/rat0/beforecno/speed24/2024-10-15_14_30_45_Mocap-Computer-4/2024-10-15_14_30_45_Mocap-Computer-4_wbgam_h264.mp4","/home/spencelab/lvn_project/10_15_2024/camera4/rat0/beforecno/speed60/2024-10-15_15_36_53_Mocap-Computer-4/2024-10-15_15_36_53_Mocap-Computer-4_wbgam_h264.mp4","/home/spencelab/lvn_project/10_15_2024/camera4/rat1/beforecno/speed40/2024-10-15_13_40_43_Mocap-Computer-4/2024-10-15_13_40_43_Mocap-Computer-4_wbgam_h264.mp4","/home/spencelab/lvn_project/10_11_2024/camera1/rat0/aftercno/speed32/2024-10-11_17_55_49_Mocap-Computer-1/2024-10-11_17_55_49_Mocap-Computer-1_wbgam_h264.mp4","/home/spencelab/lvn_project/10_11_2024/camera1/rat0/aftercno/speed36/2024-10-11_17_56_43_Mocap-Computer-1/2024-10-11_17_56_43_Mocap-Computer-1_wbgam_h264.mp4","/home/spencelab/lvn_project/10_11_2024/camera2/rat0/beforecno/speed24/2024-10-11_13_27_53_Mocap-Computer-2/2024-10-11_13_27_53_Mocap-Computer-2_wbgam_h264.mp4","/home/spencelab/lvn_project/10_11_2024/camera2/rat0/beforecno/speed24/2024-10-11_13_29_24_Mocap-Computer-2/2024-10-11_13_29_24_Mocap-Computer-2_wbgam_h264.mp4","/home/spencelab/lvn_project/10_15_2024/camera2/rat0/aftercno/speed40/2024-10-15_17_36_45_Mocap-Computer-2/2024-10-15_17_36_45_Mocap-Computer-2_wbgam_h264.mp4","/home/spencelab/lvn_project/10_15_2024/camera3/rat1/aftercno/speed50/2024-10-15_17_13_00_Mocap-Computer-3/2024-10-15_17_13_00_Mocap-Computer-3_wbgam_h264.mp4","/home/spencelab/lvn_project/10_15_2024/camera4/rat1/aftercno/speed50/2024-10-15_17_08_38_Mocap-Computer-4/2024-10-15_17_08_38_Mocap-Computer-4_wbgam_h264.mp4","/home/spencelab/modelZoo_latper/old_data/11_8_ratvideos/rat558/cam2/2023-11-08_13_33_59/2023-11-08_13_33_59_camera2_wbgam_h264_crf16.mp4","/home/spencelab/modelZoo_latper/old_data/4CamRatVideos/10_4rat573/cam3/2023-10-04_16_19_03_camcom2_wbgam_h264_crf16.mp4","/home/spencelab/modelZoo_latper/old_data/11_8_ratvideos/rat573/cam5/2023-11-08_14_06_07/2023-11-08_14_06_07_camera5_wbgam_h264_crf16.mp4","/home/spencelab/modelZoo_latper/old_data/11_8_ratvideos/rat573/cam5/2023-11-08_14_05_02/2023-11-08_14_05_02_camera5_wbgam_h264_crf16.mp4","/home/spencelab/modelZoo_latper/old_data/11_8_ratvideos/rat573/cam4/2023-11-08_14_06_07/2023-11-08_14_06_07_camera4_wbgam_h264_crf16.mp4","/home/spencelab/modelZoo_latper/old_data/11_8_ratvideos/rat573/cam4/2023-11-08_14_05_02/2023-11-08_14_05_02_camera4_wbgam_h264_crf16.mp4","/home/spencelab/modelZoo_latper/old_data/11_8_ratvideos/rat573/cam3/2023-11-08_14_06_07/2023-11-08_14_06_07_camera3_wbgam_h264_crf16.mp4","/home/spencelab/modelZoo_latper/old_data/11_8_ratvideos/rat573/cam3/2023-11-08_14_05_02/2023-11-08_14_05_02_camera3_wbgam_h264_crf16.mp4","/home/spencelab/modelZoo_latper/old_data/11_8_ratvideos/rat573/cam2/2023-11-08_14_06_07/2023-11-08_14_06_07_camera2_wbgam_h264_crf16.mp4","/home/spencelab/modelZoo_latper/old_data/11_8_ratvideos/rat573/cam2/2023-11-08_14_05_02/2023-11-08_14_05_02_camera2_wbgam_h264_crf16.mp4","/home/spencelab/modelZoo_latper/old_data/macpns/2024-04-25_10_29_33_camcommerb1_wbgam_h264.mp4","/home/spencelab/modelZoo_latper/old_data/macpns/2024-04-25_10_29_33_camcommerb2_wbgam_h264.mp4","/home/spencelab/modelZoo_latper/old_data/macpns/2024-04-25_11_08_09_camcommerb1_wbgam_h264.mp4","/home/spencelab/modelZoo_latper/old_data/macpns/2024-04-25_11_08_09_camcommerb2_wbgam_h264.mp4","/home/spencelab/modelZoo_latper/old_data/commissurals/2024-01-03_12_23_29_camcommerb1_wbgam_h264.mp4","/home/spencelab/modelZoo_latper/old_data/commissurals/2024-01-03_12_24_43_camcommerb2_wbgam_h264.mp4","/home/spencelab/modelZoo_latper/old_data/commissurals/2024-01-03_12_54_24_camcommerb1_wbgam_h264.mp4","/home/spencelab/modelZoo_latper/old_data/commissurals/2024-01-03_12_54_35_camcommerb2_wbgam_h264.mp4","/home/spencelab/modelZoo_latper/old_data/commissurals/2024-01-03_13_21_30_camcommerb1_wbgam_h264.mp4","/home/spencelab/modelZoo_latper/old_data/commissurals/2024-01-03_13_22_32_camcommerb2_wbgam_h264.mp4","/home/spencelab/modelZoo_latper/old_data/commissurals/2024-09-06_13_59_26_camcommerb1/2024-09-06_13_59_26_camcommerb1_wbgam_h264.mp4","/home/spencelab/modelZoo_latper/old_data/commissurals/2024-09-06_13_59_26_camcommerb2/2024-09-06_13_59_26_camcommerb2_wbgam_h264.mp4","/home/spencelab/modelZoo_latper/old_data/commissurals/2024-09-06_13_59_26_camcommerb3/2024-09-06_13_59_26_camcommerb3_wbgam_h264.mp4","/home/spencelab/modelZoo_latper/old_data/commissurals/2024-09-06_13_59_26_camcommerb4/2024-09-06_13_59_26_camcommerb4_wbgam_h264.mp4","/home/spencelab/modelZoo_latper/old_data/commissurals/2024-09-06_14_14_09_camcommerb1/2024-09-06_14_14_09_camcommerb1_wbgam_h264.mp4","/home/spencelab/modelZoo_latper/old_data/commissurals/2024-09-06_14_14_09_camcommerb3/2024-09-06_14_14_09_camcommerb3_wbgam_h264.mp4","/home/spencelab/modelZoo_latper/old_data/commissurals/2024-09-06_14_14_09_camcommerb4/2024-09-06_14_14_09_camcommerb4_wbgam_h264.mp4","/home/spencelab/modelZoo_latper/old_data/commissurals/2024-09-06_14_57_48_camcommerb1/2024-09-06_14_57_48_camcommerb1_wbgam_h264.mp4","/home/spencelab/modelZoo_latper/old_data/commissurals/2024-09-06_14_57_48_camcommerb2/2024-09-06_14_57_48_camcommerb2_wbgam_h264.mp4","/home/spencelab/modelZoo_latper/old_data/commissurals/2024-09-06_14_57_48_camcommerb3/2024-09-06_14_57_48_camcommerb3_wbgam_h264.mp4","/home/spencelab/modelZoo_latper/old_data/commissurals/2024-09-06_14_57_48_camcommerb4/2024-09-06_14_57_48_camcommerb4_wbgam_h264.mp4","/home/spencelab/modelZoo_latper/old_data/commissurals/2024-09-06_15_06_43_camcommerb1/2024-09-06_15_06_43_camcommerb1_wbgam_h264.mp4","/home/spencelab/modelZoo_latper/old_data/commissurals/2024-09-06_15_06_43_camcommerb2/2024-09-06_15_06_43_camcommerb2_wbgam_h264.mp4","/home/spencelab/modelZoo_latper/old_data/commissurals/2024-09-06_15_06_43_camcommerb3/2024-09-06_15_06_43_camcommerb3_wbgam_h264.mp4","/home/spencelab/modelZoo_latper/old_data/commissurals/2024-09-06_15_06_43_camcommerb4/2024-09-06_15_06_43_camcommerb4_wbgam_h264.mp4","/home/spencelab/modelZoo_latper/old_data/commissurals/2024-09-06_14_14_09_camcommerb2/2024-09-06_14_14_09_camcommerb2_wbgam_h264.mp4","/home/spencelab/modelZoo_latper/old_data/4CamRatVideos/10-20 Rat videos/Cam 1/2023-10-20_11_52_49/2023-10-20_11_52_49_camera2_wbgam_h264_crf16.mp4","/home/spencelab/modelZoo_latper/old_data/4CamRatVideos/10-20 Rat videos/Cam 2/2023-10-20_11_52_49/2023-10-20_11_52_49_camera3_wbgam_h264_crf16.mp4","/home/spencelab/modelZoo_latper/old_data/4CamRatVideos/10-20 Rat videos/Cam 4/2023-10-20_11_52_49/2023-10-20_11_52_49_camera5_wbgam_h264_crf16.mp4","/home/spencelab/modelZoo_latper/old_data/4CamRatVideos/10-20 Rat videos/Cam 3/2023-10-20_11_52_49/2023-10-20_11_52_49_camera4_wbgam_h264_crf16.mp4"
