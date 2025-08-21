@@ -138,3 +138,20 @@ def merge_dlc_with_metadata(
             print(f"[DONE] Wrote CSV → {outp}")
 
     return merged
+
+
+    # 1) Paths
+data_dir = '/Users/gavinkoma/Documents/lab_projects/lrn_reach/iteration02/'
+metadata_csv = '/Users/gavinkoma/Documents/lab_projects/lrn_reach/video_metadata_with_dlc_links_backto.csv'
+out_csv = '/Users/gavinkoma/Documents/lab_projects/lrn_reach/long_csv_it2.csv'
+
+# 2) Run (CSV)
+df = merge_dlc_with_metadata(
+    data_dir=data_dir,
+    metadata_path=metadata_csv,
+    output_path=out_csv,
+    pattern="*DLC_*.csv",    # change if your DLC outputs differ
+    excel=False,
+    verbose=True,
+)
+
