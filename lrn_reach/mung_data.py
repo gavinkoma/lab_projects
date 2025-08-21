@@ -32,10 +32,11 @@ def merge_dlc_with_metadata(
     output_path: str | Path,
     pattern: str = DEFAULT_PATTERN,
     excel: bool = False,
-    sheet_name: str = "data",
+    sheet_name: str = "mung_lrn_data",
     strict: bool = False,
     verbose: bool = True,
 ) -> pd.DataFrame:
+
     """
     Build a long-format dataset:
     - For each DLC CSV in data_dir, read per-frame rows, flatten columns, derive movie_stem.
@@ -44,6 +45,7 @@ def merge_dlc_with_metadata(
     - Set index to metadata.file_path (duplicates allowed). Add __dlc_source_* bookkeeping.
     - Save CSV or Excel. Returns the merged DataFrame.
     """
+    
     data_dir = Path(data_dir)
     metadata_path = Path(metadata_path)
     output_path = Path(output_path)

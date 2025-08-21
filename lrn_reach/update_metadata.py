@@ -5,7 +5,7 @@ from pathlib import Path
 # --- EDIT THESE ---
 INPUT_CSV = "video_list.csv"   # your CSV file
 PATH_COLUMN = "file_path"           # the column in your CSV that holds full paths
-OUTPUT_CSV = "video_metadata_parsed.csv"
+OUTPUT_CSV = "video_metadata_parsed_it2.csv"
 # ------------------
 
 def parse_row(p):
