@@ -1,0 +1,33 @@
+# You can specify columns explicitly...
+columns:
+  - scapula_x
+  - scapula_y
+  - shoulder_x
+  - shoulder_y
+  - elbow_x
+  - elbow_y
+  - wrist_x
+  - wrist_y
+  - MCP_x
+  - MCP_y
+
+
+# ...and/or regex patterns to match many columns at once (applied after `columns`)
+patterns:
+  - ".*_x$"
+  - ".*_y$"
+
+# Optional defaults for all selected columns
+defaults:
+  k: 3                # spline degree
+  s: null             # smoothing factor (None -> auto)
+  nan_strategy: interp  # interp | ffill | bfill | drop
+
+# Optional per-column overrides
+overrides:
+  hip_x:
+    s: 200.0
+  knee_y:
+    nan_strategy: drop
+
+    
