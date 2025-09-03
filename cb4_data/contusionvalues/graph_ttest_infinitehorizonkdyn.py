@@ -7,8 +7,6 @@ from scipy.stats import ttest_ind
 file_path = 'infinite_horizon_kdyn.csv.xlsx'
 df = pd.read_excel(file_path)
 
-import pandas as pd
-import seaborn as sns
 import matplotlib.pyplot as plt
 
 # Use original df — no filtering
@@ -17,7 +15,7 @@ sns.boxplot(
     data=df,
     x='Group',
     y='Contusion Value (kDyn)',
-    showfliers=False,  # hide outlier dots, bu
+    showfliers=False) # hide outlier dots, bu
 
 exp = df[df['group'] == 'experimental']['actual_value']
 ctrl = df[df['group'] == 'control']['actual_value']
@@ -29,11 +27,6 @@ print(f"P-value: {p_val:.4f}")
 
 #ttest pvalue = 0.2118
 
-
-##filtered to have outliers removed
-import pandas as pd
-import seaborn as sns
-import matplotlib.pyplot as plt
 
 # Filter the DataFrame to exclude actual_value > 220
 df_filtered = df[df['actual_value'] <= 220]
@@ -77,10 +70,6 @@ print(f"P-value: {p_val:.4f}")
 
 
 
-import pandas as pd
-import seaborn as sns
-import matplotlib.pyplot as plt
-
 # Make a copy and capitalize the group labels
 df_plot = df.copy()
 df_plot['group'] = df_plot['group'].str.capitalize()
@@ -102,6 +91,3 @@ plt.ylabel('Impact Force (kDyn)')
 
 plt.tight_layout()
 plt.show()
-history
-
-
